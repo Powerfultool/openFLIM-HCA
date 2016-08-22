@@ -324,5 +324,6 @@ public final class XYZMotionInterface {
             Logger.getLogger(XYZMotionInterface.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     
 }
