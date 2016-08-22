@@ -602,7 +602,7 @@ public class XYSequencing extends javax.swing.JPanel {
 
         snaketypelabel.setText("Snake type");
 
-        insertType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        insertType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No insert", "Normal", "CO2" }));
         insertType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 insertTypeActionPerformed(evt);

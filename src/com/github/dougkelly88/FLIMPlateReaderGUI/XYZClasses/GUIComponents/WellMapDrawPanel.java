@@ -91,10 +91,11 @@ public class WellMapDrawPanel extends JPanel {
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-
+            
+            double scalefactor = 4.0;
             double[] fov = sap_.getFLIMFOVSize();
-            int drawFovV = (int) (fov[0] / conversionFactor_);
-            int drawFovH = (int) (fov[1] / conversionFactor_);
+            int drawFovV = (int) (fov[0]*scalefactor / conversionFactor_);
+            int drawFovH = (int) (fov[1]*scalefactor / conversionFactor_);
             
             Font font = g.getFont();
             g.setFont(font.deriveFont(Font.PLAIN, 40));

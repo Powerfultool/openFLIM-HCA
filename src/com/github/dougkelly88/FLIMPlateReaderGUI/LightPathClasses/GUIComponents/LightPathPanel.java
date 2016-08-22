@@ -137,6 +137,19 @@ public class LightPathPanel extends javax.swing.JPanel {
         }
     }    
     
+    public void getConfiguredCameras(){
+        StrVector vals = new StrVector();
+        try {
+            vals = core_.getAllowedPropertyValues("Camera", "Label");
+            
+            for (String str : vals) {
+                System.out.println(str);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
     public void LoadJSONPortOffsets(){
         // Show a warning if the objectives loaded don't match the ones stored in Micro-manager?
         int num_props = 4; //Name, Xoff, Yoff, Zoff
