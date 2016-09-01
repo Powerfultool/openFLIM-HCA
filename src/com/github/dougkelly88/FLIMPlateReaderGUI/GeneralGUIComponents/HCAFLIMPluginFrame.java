@@ -212,6 +212,7 @@ public class HCAFLIMPluginFrame extends javax.swing.JFrame {
 
         loadDefaultPlateConfig();
         lightPathControls1.setLoadedHardwareValues();
+        
         setupSequencingTable();
         xYZPanel1.setupAFParams(this);
         
