@@ -178,7 +178,7 @@ public class SpectralSequencing extends javax.swing.JPanel {
         try{
             StrVector vals = core_.getAllowedPropertyValues(devLabel, "Label");
             for (String str : vals){
-                combo.addItem(str);
+                combo.addItem((Object)str);
             }
             filtTable_.getColumnModel().getColumn(col).setCellEditor(new DefaultCellEditor(combo));
             combo.addItemListener(new ItemListener(){

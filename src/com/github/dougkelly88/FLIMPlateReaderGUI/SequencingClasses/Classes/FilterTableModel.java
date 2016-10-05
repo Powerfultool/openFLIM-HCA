@@ -8,6 +8,7 @@ package com.github.dougkelly88.FLIMPlateReaderGUI.SequencingClasses.Classes;
 import com.github.dougkelly88.FLIMPlateReaderGUI.GeneralGUIComponents.HCAFLIMPluginFrame;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -95,9 +96,20 @@ public class FilterTableModel extends AbstractTableModel {
                 f.setLabel(value.toString());
                 break;
             case DELS_INDEX:
-                ArrayList<Integer> dels = (ArrayList<Integer>) value;
-                f.setDelays(dels);
-                break;
+                //New way
+                ArrayList newvals = (ArrayList)value;
+                ArrayList<Integer> newvalint = new ArrayList<Integer>(newvals.size());
+                for (Iterator it = newvals.iterator(); it.hasNext();) {
+                    Integer thisdel = Integer.parseInt(it.next().toString());
+                    newvalint.add(thisdel);
+                    }
+                f.setDelays(newvalint);                
+                break;                 
+                
+// JDK 1.6 stuff - old way
+//                ArrayList<Integer> dels = (ArrayList<Integer>) value;
+//                f.setDelays(dels);
+
             default: 
                 break;
         }
@@ -257,7 +269,7 @@ public class FilterTableModel extends AbstractTableModel {
     }
         
     public void loadFilterTableModelfromSpreadsheet(){
-        ArrayList<FilterSetup> load=new ArrayList();
+        ArrayList<FilterSetup> load=new ArrayList<FilterSetup>();
         HSSFSheet worksheet = HCAFLIMPluginFrame.wbLoad.getSheet("SpectralSequencing");
         int RowSize=worksheet.getPhysicalNumberOfRows();
         for(int RowNum=0; RowNum<RowSize-1;RowNum++){
@@ -274,7 +286,7 @@ public class FilterTableModel extends AbstractTableModel {
         // some initializations for changing String of numbers to arrayList        
             int strLength=delayss.length();
             int count=0;
-            ArrayList<Integer> delays=new ArrayList();
+            ArrayList<Integer> delays=new ArrayList<Integer>();
             String findStr = ",";
             int lastIndex = 0;
             String label=null;
