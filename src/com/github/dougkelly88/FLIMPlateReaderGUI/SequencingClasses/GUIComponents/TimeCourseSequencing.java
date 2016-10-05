@@ -45,7 +45,7 @@ public class TimeCourseSequencing extends javax.swing.JPanel {
     CMMCore core_; 
     MMStudio gui_;
     int selectedRow_;
-    ArrayList<String> init = new ArrayList<>();
+    ArrayList<String> init = new ArrayList<String>();
     
     
     /**

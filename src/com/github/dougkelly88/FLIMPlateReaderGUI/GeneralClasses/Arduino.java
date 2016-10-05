@@ -66,14 +66,21 @@ public class Arduino {
     }
     
     public String setMode(String mode){
-        if(null != mode)switch (mode) {
-            case "shutter":
+        int switchcase = 0;
+        if(mode == "shutter"){
+            switchcase = 1;
+        } else if (mode == "led") {
+            switchcase = 2;
+        }
+            
+        if(null != mode)switch (switchcase) {
+            case 1:
                 try {
                     core_.setProperty("Arduino-Switch", "State", "3");
                 } catch (Exception ex) {
                     System.out.println("Error: Class-Arduino; setShutterMode; shutter");
                 }   break;
-            case "led":
+            case 2:
                 try{
                     core_.setProperty("Arduino-Switch", "State", "4");
                 } catch (Exception ex) {

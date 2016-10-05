@@ -159,7 +159,9 @@ public class Acquisition {
 //                Object img = core_.getImage();
                 int[] accImg = new int[(int)dim];
                 for (int fr = 0; fr < sas.getFilters().getAccFrames(); fr++){
-                    core_.snapImage();
+                    if (frame_.terminate != true){
+                        core_.snapImage();
+                    }
                     Object img = core_.getImage();
                     // Display acquired images while the acquisition goes on
                     gui_.displayImage(img);
@@ -178,7 +180,7 @@ public class Acquisition {
 
                 }
                 if(binningD>1){
-                accImg=binningByte(accImg, binningD);
+                    accImg=binningByte(accImg, binningD);
                 }   
                 
                 saveLayersToOMETiff(writer, accImg, delays.indexOf(delay));

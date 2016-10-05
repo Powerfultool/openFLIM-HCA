@@ -864,7 +864,7 @@ public class XYZPanel extends javax.swing.JPanel {
                 parent_.nudgeFOVs(step,"Y");
             }            
         }
-        
+        xyzmi_.enableManualXYControls(manStageCheck.isSelected());
     }
     
     public FOV getCurrentFOV(){

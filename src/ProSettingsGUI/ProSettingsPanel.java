@@ -780,7 +780,7 @@ public class ProSettingsPanel extends javax.swing.JPanel {
 
     private void forceAFdefaultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forceAFdefaultActionPerformed
         // TODO add your handling code here:
-        parent_.setAFdefaultheight(Double.parseDouble(parent_.xyzmi_.getZAbsolute().toString()));
+        parent_.setAFdefaultheight(parent_.xyzmi_.getZAbsolute());
     }//GEN-LAST:event_forceAFdefaultActionPerformed
 
     private void eMailAddressFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eMailAddressFieldActionPerformed

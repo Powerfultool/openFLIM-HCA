@@ -155,7 +155,9 @@ public class Variable {
         writer.println("Motorized microscope table: "+motorizedMicroscopeTabelWhich+";");
         writer.println();
         writer.close();
-        } catch (FileNotFoundException | UnsupportedEncodingException ex) {
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(SaveData.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(SaveData.class.getName()).log(Level.SEVERE, null, ex);
         }
        

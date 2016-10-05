@@ -158,7 +158,7 @@ public class HCAFLIMPluginFrame extends javax.swing.JFrame {
     private boolean testmode;
     public boolean FOVNudgeMode;
     
-    private ArrayList<String> initLDWells = new ArrayList<>();
+    private ArrayList<String> initLDWells = new ArrayList<String>();
     // Replaces private ArrayList<String> initLDWells = new ArrayList<String>();
     //
     public String AcquisitionSavingMode;
@@ -1476,11 +1476,11 @@ public class HCAFLIMPluginFrame extends javax.swing.JFrame {
                 
         // Setup for the acquisition overall
         Acquisition acq = new Acquisition();
-        ArrayList<FOV> fovs = new ArrayList<>();
+        ArrayList<FOV> fovs = new ArrayList<FOV>();
         //Replaces: ArrayList<FOV> fovs = new ArrayList<FOV>();
-        ArrayList<TimePoint> tps = new ArrayList<>();
+        ArrayList<TimePoint> tps = new ArrayList<TimePoint>();
         //Replaces: ArrayList<TimePoint> tps = new ArrayList<TimePoint>();
-        ArrayList<FilterSetup> fss = new ArrayList<>();
+        ArrayList<FilterSetup> fss = new ArrayList<FilterSetup>();
         //Replaces: ArrayList<FilterSetup> fss = new ArrayList<FilterSetup>();
         int endOk=0;
         int ind=0; // NOT USED? Breaks stuff if deleted?
@@ -1491,7 +1491,7 @@ public class HCAFLIMPluginFrame extends javax.swing.JFrame {
             // Note that if a term is absent from the sequence setup, current
             // values should be used instead...
             
-            List<SeqAcqSetup> sass = new ArrayList<>();
+            List<SeqAcqSetup> sass = new ArrayList<SeqAcqSetup>();
             //Replaces List<SeqAcqSetup> sass = new ArrayList<SeqAcqSetup>();
             ArrayList<String> order = tableModel_.getData();
             if (!order.contains("XYZ")){
@@ -1971,7 +1971,7 @@ public class HCAFLIMPluginFrame extends javax.swing.JFrame {
                 }
                 
                acq.snapFLIMImage(path, sas.getFilters().getDelays(), sas, softwareBinningField.getText());
-                
+               
                 // saveSequencingTablesForDebugging(path);
                 
                 // shutter laser
@@ -2199,7 +2199,7 @@ public class HCAFLIMPluginFrame extends javax.swing.JFrame {
 
     private void TestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TestButtonActionPerformed
         // TODO add your handling code here:
-        ArrayList<FilterSetup> fss = new ArrayList<>();
+        ArrayList<FilterSetup> fss = new ArrayList<FilterSetup>();
         fss = spectralSequencing1.getFilterTable();
         System.out.println(fss);
         for (FilterSetup fs : fss){
