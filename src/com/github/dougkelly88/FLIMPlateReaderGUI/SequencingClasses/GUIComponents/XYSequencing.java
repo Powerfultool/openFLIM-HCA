@@ -37,7 +37,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.text.NumberFormatter;
 
 // This lot are for attempts at handling filenames - to get the list of macros
-//import Java.io.*;
+import java.io.File;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.util.Properties;
@@ -107,11 +107,11 @@ public class XYSequencing extends javax.swing.JPanel {
         insertOffsetInfo = new String [inserts.length] [inserts[0].getClass().getDeclaredFields().length];
         //System.out.println(inserts[0].getClass().getDeclaredFields().length);
         for(int i=0;i<inserts.length;i++){
-                insertOffsetInfo[i] [0] = inserts[i].getInsertName();
-                insertOffsetInfo[i] [1] = inserts[i].getInsertOffsets()[0].toString();
-                insertOffsetInfo[i] [2] = inserts[i].getInsertOffsets()[1].toString();
-                insertOffsetInfo[i] [3] = inserts[i].getInsertOffsets()[2].toString();
-                insertType.addItem(inserts[i].getInsertName());
+            insertOffsetInfo[i] [0] = inserts[i].getInsertName();
+            insertOffsetInfo[i] [1] = inserts[i].getInsertOffsets()[0].toString();
+            insertOffsetInfo[i] [2] = inserts[i].getInsertOffsets()[1].toString();
+            insertOffsetInfo[i] [3] = inserts[i].getInsertOffsets()[2].toString();
+            insertType.addItem(inserts[i].getInsertName());
         }
         InsertOffsetsloaded=true;
     }
@@ -266,7 +266,7 @@ public class XYSequencing extends javax.swing.JPanel {
         attemptsField = new javax.swing.JFormattedTextField();
         intensityThresoldField = new javax.swing.JFormattedTextField();
         testPrefind = new javax.swing.JButton();
-        prefindMacroname = new javax.swing.JComboBox();
+        prefindMacroname = new javax.swing.JComboBox<String>();
         jLabel1 = new javax.swing.JLabel();
         percentCoverage = new javax.swing.JTextField();
         plateMapBasePanel = new javax.swing.JPanel();
@@ -281,7 +281,7 @@ public class XYSequencing extends javax.swing.JPanel {
         groupDescField = new javax.swing.JTextField();
         snakeType = new javax.swing.JComboBox();
         snaketypelabel = new javax.swing.JLabel();
-        insertType = new javax.swing.JComboBox();
+        insertType = new javax.swing.JComboBox<String>();
         jLabel2 = new javax.swing.JLabel();
 
         storedXYZPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Stored XYZ positions"));
@@ -1233,21 +1233,36 @@ public class XYSequencing extends javax.swing.JPanel {
         // http://alvinalexander.com/java/list-files-directory-match-filename-extension-pattern
         java.util.Collection macrofiles;
         String [] filefilter={"ijm"};
-        java.io.File directory = new java.io.File(directoryName);
-        macrofiles = org.apache.commons.io.FileUtils.listFiles(directory, filefilter, false);
+        File directory = new File(directoryName);
+        
+        //remove existing items
+        prefindMacroname.removeAllItems();
+        
+        //New way
+        
+        File[] listOfFiles = directory.listFiles();
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+                prefindMacroname.addItem(listOfFiles[i].getName());
+            } else if (listOfFiles[i].isDirectory()) {
+            }
+        }       
+        
+//      //Old way...
+//        macrofiles = org.apache.commons.io.FileUtils.listFiles(directory, filefilter, false);
         // Unholy hybrid of: http://stackoverflow.com/questions/3293946/the-easiest-way-to-transform-collection-to-array
         //                 : http://stackoverflow.com/questions/1018750/how-to-convert-object-array-to-string-array-in-java
-        String[] macros = new String[macrofiles.size()];
-
-        Object[] macrofilesarray = macrofiles.toArray(new java.io.File[macrofiles.size()]);
-        for (int i=0;i<macrofiles.size();i++){
-            // Just want the name, not the whole path...
-            java.io.File filepath = new java.io.File(macrofilesarray[i].toString());
-            macros[i] = filepath.getName();
-        }
-        // http://stackoverflow.com/questions/4620295/dynamically-change-jcombobox
-        // http://stackoverflow.com/questions/2812850/how-to-use-map-element-as-text-of-a-jcombobox/2813094#2813094
-        prefindMacroname.setModel(new javax.swing.DefaultComboBoxModel(macros));
+//        String[] macros = new String[macrofiles.size()];
+//        Object[] macrofilesarray = macrofiles.toArray(new java.io.File[macrofiles.size()]);      
+//        for (int i=0;i<macrofiles.size();i++){
+//            // Just want the name, not the whole path...
+//            java.io.File filepath = new java.io.File(macrofilesarray[i].toString());
+//            macros[i] = filepath.getName();
+//        }
+//        // http://stackoverflow.com/questions/4620295/dynamically-change-jcombobox
+//        // http://stackoverflow.com/questions/2812850/how-to-use-map-element-as-text-of-a-jcombobox/2813094#2813094
+//        prefindMacroname.setModel(new javax.swing.DefaultComboBoxModel(macros));
+                
     }//GEN-LAST:event_advancedPFButtonActionPerformed
 
     private void quickPFButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quickPFButtonActionPerformed
@@ -1270,26 +1285,6 @@ public class XYSequencing extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_snakeTypeActionPerformed
 
-    private void insertTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertTypeActionPerformed
-        double [] OldOffsets = getInsertOffsets();
-        
-        //setByLabel(objectiveComboBox, "Objective"); - don't need to perform checking function?
-        if (InsertOffsetsloaded == true){
-            //get the offsets here...
-            int whichinsert = insertType.getSelectedIndex();
-            double [] NewOffsets = {Double.parseDouble(insertOffsetInfo[whichinsert] [1]),Double.parseDouble(insertOffsetInfo[whichinsert] [2]),Double.parseDouble(insertOffsetInfo[whichinsert] [3])}; // placeholder
-            setInsertOffsets(NewOffsets);
-
-
-            //Shift the stage to account for the objetive change
-            double [] Shifts = {0,0,0};
-            for (int i=0;i<=2;i++){
-                Shifts[i] = NewOffsets[i]-OldOffsets[i];
-            }
-            parent_.xyzmi_.moveXYRelative(Shifts[0], Shifts[1]); // ignoring Z for now
-        }
-    }//GEN-LAST:event_insertTypeActionPerformed
-
     private void SaveXYZActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveXYZActionPerformed
         parent_.saveXYZ();
     }//GEN-LAST:event_SaveXYZActionPerformed
@@ -1301,6 +1296,25 @@ public class XYSequencing extends javax.swing.JPanel {
     private void FOVNudgeCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FOVNudgeCheckboxActionPerformed
         parent_.FOVNudgeMode = FOVNudgeCheckbox.isSelected();
     }//GEN-LAST:event_FOVNudgeCheckboxActionPerformed
+
+    private void insertTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertTypeActionPerformed
+        double [] OldOffsets = getInsertOffsets();
+
+        //setByLabel(objectiveComboBox, "Objective"); - don't need to perform checking function?
+        if (InsertOffsetsloaded == true){
+            //get the offsets here...
+            int whichinsert = insertType.getSelectedIndex();
+            double [] NewOffsets = {Double.parseDouble(insertOffsetInfo[whichinsert] [1]),Double.parseDouble(insertOffsetInfo[whichinsert] [2]),Double.parseDouble(insertOffsetInfo[whichinsert] [3])}; // placeholder
+            setInsertOffsets(NewOffsets);
+
+            //Shift the stage to account for the objetive change
+            double [] Shifts = {0,0,0};
+            for (int i=0;i<=2;i++){
+                Shifts[i] = NewOffsets[i]-OldOffsets[i];
+            }
+            parent_.xyzmi_.moveXYRelative(Shifts[0], Shifts[1]); // ignoring Z for now
+        }
+    }//GEN-LAST:event_insertTypeActionPerformed
 
     public String getSnakeType(){
         return snakeType.getSelectedItem().toString();
@@ -1442,7 +1456,7 @@ public class XYSequencing extends javax.swing.JPanel {
     private javax.swing.JButton genZStackButton;
     private javax.swing.JTextField groupDescField;
     private javax.swing.JLabel groupDescLabel;
-    private javax.swing.JComboBox insertType;
+    private javax.swing.JComboBox<String> insertType;
     private javax.swing.JFormattedTextField intensityThresoldField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -1453,7 +1467,7 @@ public class XYSequencing extends javax.swing.JPanel {
     private javax.swing.JFormattedTextField noFOVsField;
     private javax.swing.JTextField percentCoverage;
     private javax.swing.JPanel plateMapBasePanel;
-    private javax.swing.JComboBox prefindMacroname;
+    private javax.swing.JComboBox<String> prefindMacroname;
     private javax.swing.JPanel prefindPanel;
     private javax.swing.JButton quickPFButton;
     private javax.swing.JFormattedTextField ringRadiusField;
