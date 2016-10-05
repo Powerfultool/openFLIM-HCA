@@ -826,10 +826,11 @@ public class ProSettingsPanel extends javax.swing.JPanel {
     }
     
     public List readObjectivesArray(JsonReader reader) throws IOException {
-        List Objectives = new ArrayList();
+//WARNING - JDK 1.6 modification        
+        List<String> Objectives = new ArrayList<String>();
         reader.beginArray();
         while (reader.hasNext()){
-            Objectives.add(readObjectiveProperties(reader));
+            Objectives.add(readObjectiveProperties(reader).toString());
         }
         reader.endArray();
         return Objectives;
