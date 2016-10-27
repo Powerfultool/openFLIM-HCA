@@ -1408,7 +1408,7 @@ public class XYSequencing extends javax.swing.JPanel {
       properties.put("mail.smtp.starttls.enable","true"); 
       properties.put("mail.smtp.auth", "true"); //enable authentication
         
-        String pww="flimimages";
+        final String pww="flimimages";
         Session session;
         session = Session.getDefaultInstance(properties, new javax.mail.Authenticator(){ 
             protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
