@@ -9,6 +9,7 @@ import com.github.dougkelly88.FLIMPlateReaderGUI.GeneralClasses.PlateProperties;
 import com.github.dougkelly88.FLIMPlateReaderGUI.GeneralClasses.Variable;
 import java.awt.Point;
 import java.awt.Rectangle;
+import ij.*;
 
 /**
  *
@@ -21,6 +22,7 @@ public class FOV implements Comparable<FOV> {
     double z_;
     double width_ = 217; // in um ffor 40x, ORCA
     double height_ = 165;   //40x obj
+    double fudgefactor = 1.15;
     
     String well_;
     String group_ = "Experiment";
@@ -160,13 +162,23 @@ public class FOV implements Comparable<FOV> {
         return pp_;
     }
 
+    public double getWidth_um() {
+        double newWidth=(width_*40/(var_.magnification*var_.relay*fudgefactor)); //Changed to x var_relay, not divide...
+        return newWidth;
+    }
+
+    public double getHeight_um() {
+        double newheight=(height_*40/(var_.magnification*var_.relay*fudgefactor)); //Changed to x var_relay, not divide...
+        return newheight;
+    }    
+    
     public double getWidth_() {
-        double newWidth=(((width_*40)/var_.magnification)*var_.relay); //Changed to x var_relay, not divide...
+        double newWidth=(((width_*40)/var_.magnification)*var_.relay*fudgefactor); //Changed to x var_relay, not divide...
         return newWidth;
     }
 
     public double getHeight_() {
-        double newheight=(((height_*40)/var_.magnification)*var_.relay); //Changed to x var_relay, not divide...
+        double newheight=(((height_*40)/var_.magnification)*var_.relay*fudgefactor); //Changed to x var_relay, not divide...
         return newheight;
     }
 

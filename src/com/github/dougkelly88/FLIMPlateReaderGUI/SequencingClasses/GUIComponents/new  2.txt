@@ -1,0 +1,9 @@
+The form seems to be corrupted. The GUI builder
+is not able to find the sections with the generated code.
+The special comments that denote the start and the end
+of these sections were removed or modified.
+
+The form will be opened in read-only mode.
+
+See http://wiki.netbeans.org/FormGuardedBlockError
+for additional information.

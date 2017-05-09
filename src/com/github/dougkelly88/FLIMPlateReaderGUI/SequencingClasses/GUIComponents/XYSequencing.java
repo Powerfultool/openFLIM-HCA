@@ -47,7 +47,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-// http://stackoverflow.com/questions/31700500/using-netbeans-8-0-2-and-want-to-use-org-apache-commons-io-fileutils-how
+
 //import javax.swing.filechooser.FileNameExtensionFilter;
 //import org.apache.commons.io.FileUtils;
 //import org.apache.commons.io.filefilter.WildcardFileFilter;
@@ -66,7 +66,8 @@ public class XYSequencing extends javax.swing.JPanel {
     JTable fovTable_;
     SeqAcqProps sap_;
     public HCAFLIMPluginFrame parent_;
-    final static String um = "(" + "\u00B5" + "m)";
+    //final static String um = "(" + "\u00B5" + "m)";
+    final static String um = "(" + "micro" + "m)";
     boolean zAsOffset_ = true;
     double[] zStackParams = {0.0, 0.0, 1.0};
     XYZMotionInterface xyzmi_;
@@ -805,7 +806,12 @@ public class XYSequencing extends javax.swing.JPanel {
 
     public String getSelectedAnalyser (){
         //System.out.println(prefindMacroname.getSelectedItem().toString());
-        return prefindMacroname.getSelectedItem().toString();
+        String selected_analyser = "default.ijm";
+        System.out.print(prefindMacroname.getSelectedItem().toString());
+        if (prefindMacroname.getSelectedItem().toString().length()>0){
+            selected_analyser = prefindMacroname.getSelectedItem().toString();
+        }
+        return selected_analyser;
     }
         
     private ArrayList<FOV> generateSpiral1(int noFOV, String wellString) {
@@ -928,7 +934,7 @@ public class XYSequencing extends javax.swing.JPanel {
         FOV fov = new FOV(wellString, pp_, 0);
         double[] centrexy = {fov.getX(), fov.getY()};
 //        double[] DXY = {sap_.getFLIMFOVSize()[0], sap_.getFLIMFOVSize()[1]};
-        double[] DXY = {parent_.globalFOVset_.getWidth_(), parent_.globalFOVset_.getHeight_()};
+        double[] DXY = {parent_.globalFOVset_.getWidth_um(), parent_.globalFOVset_.getHeight_um()};
         
         /*int[][] dir = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
         double[] dxy = new double[2];
@@ -970,7 +976,7 @@ public class XYSequencing extends javax.swing.JPanel {
     
     private double[] mysteriousSpiralProducer(double ny, double nx, String wellString, double[] centrexy, ArrayList<FOV> spiralFgOVs) {
         FOV fov = new FOV(wellString, pp_, 0);
-        double[] DXY = {parent_.globalFOVset_.getWidth_(), parent_.globalFOVset_.getHeight_()};
+        double[] DXY = {parent_.globalFOVset_.getWidth_um(), parent_.globalFOVset_.getHeight_um()};
         if(nx==0 & ny==1){
             centrexy[1]=centrexy[1]+DXY[1];
             fov = new FOV(centrexy[0], centrexy[1], 0,wellString, pp_);
@@ -1236,7 +1242,10 @@ public class XYSequencing extends javax.swing.JPanel {
         File directory = new File(directoryName);
         
         //remove existing items
-        prefindMacroname.removeAllItems();
+        //prefindMacroname.removeAllItems();
+        prefindMacroname.removeItemAt(0);
+        prefindMacroname.removeItemAt(0);
+        prefindMacroname.removeItemAt(0);
         
         //New way
         
@@ -1244,10 +1253,11 @@ public class XYSequencing extends javax.swing.JPanel {
         for (int i = 0; i < listOfFiles.length; i++) {
             if (listOfFiles[i].isFile()) {
                 prefindMacroname.addItem(listOfFiles[i].getName());
+                System.out.println(listOfFiles[i].getName());
             } else if (listOfFiles[i].isDirectory()) {
             }
         }       
-        
+        prefindMacroname.setSelectedIndex(1);
 //      //Old way...
 //        macrofiles = org.apache.commons.io.FileUtils.listFiles(directory, filefilter, false);
         // Unholy hybrid of: http://stackoverflow.com/questions/3293946/the-easiest-way-to-transform-collection-to-array
