@@ -9,7 +9,7 @@ import com.github.dougkelly88.FLIMPlateReaderGUI.GeneralClasses.PlateProperties;
 import com.github.dougkelly88.FLIMPlateReaderGUI.GeneralClasses.Variable;
 import java.awt.Point;
 import java.awt.Rectangle;
-import ij.*;
+//import ij.*;
 
 /**
  *

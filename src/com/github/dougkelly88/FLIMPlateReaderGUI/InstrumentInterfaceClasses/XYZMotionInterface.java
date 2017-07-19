@@ -87,12 +87,14 @@ public final class XYZMotionInterface {
     public int gotoFOV(FOV fov) {
         double[] Offsets = calculateOffsets();
         
-        fov.setX(fov.getX()+Offsets[0]);
-        fov.setY(fov.getY()+Offsets[1]);
-        fov.setZ(fov.getZ()+Offsets[2]);
+        FOV tempfov = fov;
+        
+        tempfov.setX(fov.getX()+Offsets[0]);
+        tempfov.setY(fov.getY()+Offsets[1]);
+        tempfov.setZ(tempfov.getZ()+Offsets[2]);
 
         try {
-            Point2D.Double stage = fovXYtoStageXY(fov);
+            Point2D.Double stage = fovXYtoStageXY(tempfov);
             core_.setXYPosition(xystage_, stage.getX(), stage.getY());
             // parent_.currentFOV_ = fov;
         } catch (Exception e) {
