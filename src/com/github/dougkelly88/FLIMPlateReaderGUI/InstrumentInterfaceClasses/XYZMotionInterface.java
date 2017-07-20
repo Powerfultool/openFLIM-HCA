@@ -101,6 +101,11 @@ public final class XYZMotionInterface {
             System.out.println(e.getMessage());
         }
         enableManualXYControls(var_.manStageCheck);
+
+        tempfov.setX(fov.getX()-Offsets[0]);
+        tempfov.setY(fov.getY()-Offsets[1]);
+        tempfov.setZ(tempfov.getZ()-Offsets[2]);
+        
         return 1;
     }
 

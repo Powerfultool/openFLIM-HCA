@@ -1181,12 +1181,22 @@ public class HCAFLIMPluginFrame extends javax.swing.JFrame {
     }
     
     public double getPrefindThreshold(){
-        return xYSequencing1.getPrefindThreshold();
+        return Double.parseDouble(getPrefindSettingValue(1));
+        //WARNING! ASSUMES THIS IS THE FIRST VALUE
     }
     
     public double getPercentCoverage(){
-        return xYSequencing1.getPercentCoverage();
+        return Double.parseDouble(getPrefindSettingValue(2));
+        //WARNING! ASSUMES THIS IS THE SECOND VALUE
     }
+    
+//    public double getPrefindThreshold(){
+//        return xYSequencing1.getPrefindThreshold();
+//    }
+//    
+//    public double getPercentCoverage(){
+//        return xYSequencing1.getPercentCoverage();
+//    }
     
     // A routine for determining whehter we want to accept a FOV - hive this off to a separate class later
     public boolean checkprefindimg(Object img){
