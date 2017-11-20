@@ -876,7 +876,7 @@ public class FLIMPanel extends javax.swing.JPanel {
                    endOk=0;
                    break;
                 }
-                    core_.setProperty("Delay box", "Delay (ps)", delay);
+                    core_.setProperty("KentechHDG", "Delay (ps)", delay);
                     core_.sleep(200);
                     meanValues.add(fm_.getMeanValueOfImage(core_));
                     delays.add(delay);
