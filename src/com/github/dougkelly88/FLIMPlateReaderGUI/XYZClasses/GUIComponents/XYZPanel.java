@@ -343,7 +343,7 @@ public class XYZPanel extends javax.swing.JPanel {
         });
 
         fixedAFdefault.setEditable(false);
-        fixedAFdefault.setText("5851");
+        fixedAFdefault.setText("0");
         fixedAFdefault.setToolTipText("");
         fixedAFdefault.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -599,7 +599,11 @@ public class XYZPanel extends javax.swing.JPanel {
 //        double currentZ = 1000; //TODO get current Z
         double currentZ = xyzmi_.getZAbsolute();
         FOV fov = new FOV(upper, pp_, currentZ);
-        xyzmi_.gotoFOV(fov);
+        try {
+            xyzmi_.gotoFOV(fov);
+        } catch (Exception ex) {
+            Logger.getLogger(XYZPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
         xyzmi_.enableManualXYControls(manStageCheck.isSelected());
     }//GEN-LAST:event_goToWellButtonActionPerformed
 
@@ -640,10 +644,20 @@ public class XYZPanel extends javax.swing.JPanel {
             } catch (Exception ex) {
                 Logger.getLogger(XYZPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
-            Double fO=xyzmi_.customAutofocus(Double.parseDouble(afOffsetField.getText()));
+            Double fO = null;
+            try {
+                fO = xyzmi_.customAutofocus(Double.parseDouble(afOffsetField.getText()));
+            } catch (Exception ex) {
+                Logger.getLogger(XYZPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
             focusOffsetField.setText(Double.toString(fO));   
         } else{
-            Double fO=xyzmi_.customAutofocus(Double.parseDouble(afOffsetField.getText()));
+            Double fO = null;
+            try {
+                fO = xyzmi_.customAutofocus(Double.parseDouble(afOffsetField.getText()));
+            } catch (Exception ex) {
+                Logger.getLogger(XYZPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
             focusOffsetField.setText(Double.toString(fO));
         }
         
@@ -932,25 +946,25 @@ public class XYZPanel extends javax.swing.JPanel {
     
     public void updatePanel(){
         // do something when XYZPanel is selected
-        String[] tet=afObj.toArray();
-        List<String> list = new ArrayList<String>();
-            int count=0;
-            for (String str : afObj){
-                if (installedObj.contains(str)){
-                    list.add(str);   
-                }
-            }
-            int length=list.size();
-            String[] choices= new String[length];
-            for(int i = 0; i<length;i++){
-                choices[i]=list.get(i);
-            }
-        if(Arrays.asList(choices).contains(var_.ObjectiveComboBoxSelectedItem)){
-            afObjectiveCombo.setSelectedItem(var_.ObjectiveComboBoxSelectedItem);
+//        String[] tet=afObj.toArray();
+//        List<String> list = new ArrayList<String>();
+//            int count=0;
+//            for (String str : afObj){
+//                if (installedObj.contains(str)){
+//                    list.add(str);   
+//                }
+//            }
+//            int length=list.size();
+//            String[] choices= new String[length];
+//            for(int i = 0; i<length;i++){
+//                choices[i]=list.get(i);
+//            }
+//        if(Arrays.asList(choices).contains(var_.ObjectiveComboBoxSelectedItem)){
+//            afObjectiveCombo.setSelectedItem(var_.ObjectiveComboBoxSelectedItem);
             flag=false;
-        } else{
-            flag=true;
-        }
+//        } else{
+//            flag=true;
+//        }
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

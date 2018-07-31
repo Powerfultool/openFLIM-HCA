@@ -54,7 +54,7 @@ public class ProSettingsPanel extends javax.swing.JPanel {
         arduino_ = Arduino.getInstance();
         xYSeq_ = XYSequencing.getInstance();
         var_.motorizedMicroscopeTabelWhich = motorizedMicroscopeTableComboBox.getSelectedItem().toString();
-        var_.autofocusWhich = AutoFocusSelectComboBox.getSelectedItem().toString();
+        //var_.autofocusWhich = AutoFocusSelectComboBox.getSelectedItem().toString();
         var_.acquisitionStrategy = AcquisitionStrategyComboBox.getSelectedItem().toString();
         H_shift_scale = 1;
         V_shift_scale = 1;
@@ -117,10 +117,11 @@ public class ProSettingsPanel extends javax.swing.JPanel {
         AcquisitionSavingMode_combo = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
         Hardware = new javax.swing.JPanel();
-        AutoFocusSelectComboBox = new javax.swing.JComboBox();
         AutoFocusLabel = new javax.swing.JLabel();
         motorizedMicroscopeTableComboBox = new javax.swing.JComboBox();
         MotorizedMicroscopeTableLabel = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        del_box_comm_wait = new javax.swing.JTextField();
         acquisitionStrategyPanel = new javax.swing.JPanel();
         AcquisitionStrategyComboBox = new javax.swing.JComboBox();
         prefindthreshtest = new javax.swing.JTextField();
@@ -188,15 +189,16 @@ public class ProSettingsPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(arduinoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(laserIntensityLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(arduinoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(arduinoPanelLayout.createSequentialGroup()
-                            .addGroup(arduinoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(thresholdA1Label)
-                                .addComponent(thresholdA0Label, javax.swing.GroupLayout.Alignment.TRAILING))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(updateLaserIntensityButton)
-                            .addGap(0, 0, Short.MAX_VALUE))
-                        .addComponent(shutterResponseLabel))))
+                    .addGroup(arduinoPanelLayout.createSequentialGroup()
+                        .addGroup(arduinoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(arduinoPanelLayout.createSequentialGroup()
+                                .addGroup(arduinoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(thresholdA1Label)
+                                    .addComponent(thresholdA0Label, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(updateLaserIntensityButton))
+                            .addComponent(shutterResponseLabel))
+                        .addGap(0, 0, Short.MAX_VALUE))))
             .addGroup(arduinoPanelLayout.createSequentialGroup()
                 .addComponent(enableLightCheckButton)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -367,13 +369,6 @@ public class ProSettingsPanel extends javax.swing.JPanel {
 
         Hardware.setBorder(javax.swing.BorderFactory.createTitledBorder("Hardware"));
 
-        AutoFocusSelectComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ZDC Olympus", "Definite focus Zeiss" }));
-        AutoFocusSelectComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AutoFocusSelectComboBoxActionPerformed(evt);
-            }
-        });
-
         AutoFocusLabel.setText("Auto focus");
 
         motorizedMicroscopeTableComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Corvus Stage", "WS PiezoDrive 08" }));
@@ -385,6 +380,15 @@ public class ProSettingsPanel extends javax.swing.JPanel {
 
         MotorizedMicroscopeTableLabel.setText("Motorized microscope table");
 
+        jLabel5.setText("Delay box comm wait [ms]");
+
+        del_box_comm_wait.setText("100");
+        del_box_comm_wait.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                del_box_comm_waitActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout HardwareLayout = new javax.swing.GroupLayout(Hardware);
         Hardware.setLayout(HardwareLayout);
         HardwareLayout.setHorizontalGroup(
@@ -395,21 +399,23 @@ public class ProSettingsPanel extends javax.swing.JPanel {
                     .addComponent(AutoFocusLabel)
                     .addComponent(MotorizedMicroscopeTableLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(HardwareLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(motorizedMicroscopeTableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(AutoFocusSelectComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(motorizedMicroscopeTableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(61, 61, 61)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(del_box_comm_wait, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         HardwareLayout.setVerticalGroup(
             HardwareLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(HardwareLayout.createSequentialGroup()
-                .addGroup(HardwareLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(AutoFocusSelectComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(AutoFocusLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(AutoFocusLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addGroup(HardwareLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(motorizedMicroscopeTableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(MotorizedMicroscopeTableLabel))
+                    .addComponent(MotorizedMicroscopeTableLabel)
+                    .addComponent(jLabel5)
+                    .addComponent(del_box_comm_wait, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -658,7 +664,7 @@ public class ProSettingsPanel extends javax.swing.JPanel {
                 .addComponent(eMailDefault)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(SpecialAcquistionTickBox)
-                .addContainerGap(112, Short.MAX_VALUE))
+                .addContainerGap(149, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -716,10 +722,6 @@ public class ProSettingsPanel extends javax.swing.JPanel {
     private void AcquisitionSavingMode_comboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AcquisitionSavingMode_comboActionPerformed
         var_.AcquisitionSavingMode = AcquisitionSavingMode_combo.getSelectedItem().toString(); 
     }//GEN-LAST:event_AcquisitionSavingMode_comboActionPerformed
-
-    private void AutoFocusSelectComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AutoFocusSelectComboBoxActionPerformed
-        var_.autofocusWhich = AutoFocusSelectComboBox.getSelectedItem().toString();
-    }//GEN-LAST:event_AutoFocusSelectComboBoxActionPerformed
 
     private void motorizedMicroscopeTableComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_motorizedMicroscopeTableComboBoxActionPerformed
         var_.motorizedMicroscopeTabelWhich = motorizedMicroscopeTableComboBox.getSelectedItem().toString();
@@ -809,6 +811,10 @@ public class ProSettingsPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_SpecialAcquistionTickBoxActionPerformed
 
+    private void del_box_comm_waitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_del_box_comm_waitActionPerformed
+        parent_.Del_box_comm_wait = get_RelayMag();
+    }//GEN-LAST:event_del_box_comm_waitActionPerformed
+
     public double getHshiftscale(){
         return H_shift_scale;
     }
@@ -843,6 +849,10 @@ public class ProSettingsPanel extends javax.swing.JPanel {
         }
         reader.endArray();
         return Objectives;
+    }
+
+    public double get_RelayMag(){
+        return Double.parseDouble(this.del_box_comm_wait.getText());
     }
     
     public Objective readObjectiveProperties (JsonReader reader) throws IOException {
@@ -922,7 +932,6 @@ public class ProSettingsPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox AcquisitionSavingMode_combo;
     private javax.swing.JComboBox AcquisitionStrategyComboBox;
     private javax.swing.JLabel AutoFocusLabel;
-    private javax.swing.JComboBox AutoFocusSelectComboBox;
     private javax.swing.JTextField HShiftScale;
     private javax.swing.JToggleButton H_V_swap;
     private javax.swing.JPanel Hardware;
@@ -935,6 +944,7 @@ public class ProSettingsPanel extends javax.swing.JPanel {
     private javax.swing.JTextField VShiftScale;
     private javax.swing.JPanel acquisitionStrategyPanel;
     private javax.swing.JPanel arduinoPanel;
+    private javax.swing.JTextField del_box_comm_wait;
     private javax.swing.JPanel dougPanel;
     private javax.swing.JTextField eMailAddressField;
     private javax.swing.JLabel eMailAddressLabel;
@@ -948,6 +958,7 @@ public class ProSettingsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JTextField laserIntensityField;
     private javax.swing.JLabel laserIntensityLabel;
     private javax.swing.JComboBox motorizedMicroscopeTableComboBox;

@@ -73,6 +73,8 @@ public class Acquisition {
                 int del=delays.indexOf(delay);
                 try{
                 core_.setProperty("Delay box", "Delay (ps)", delay);
+                //####BAD SLEEP###
+                core_.sleep(100);
                 } catch(Exception e) {
                     System.out.println(e.getMessage());
                     System.out.println("Could not set delay in Delay box!");
@@ -105,6 +107,14 @@ public class Acquisition {
 
                 }
                 
+                long startTime = System.nanoTime();
+                //REVERSE ENDIAN-NESS
+                for(int idx = 0; idx<dim; idx++){
+                    accImg[idx] = Integer.reverseBytes(accImg[idx]);
+                }
+                long endTime = System.nanoTime();
+                long duration = (endTime - startTime);
+                System.out.println("Endian-ness reversal took: "+ Long.toString(duration));
                 
                 saveLayersToOMETiff(writer, accImg, delays.indexOf(delay));
                 ////
@@ -146,6 +156,8 @@ public class Acquisition {
                 int del=delays.indexOf(delay);
                 try{
                 core_.setProperty("Delay box", "Delay (ps)", delay);
+                //####BAD SLEEP###
+                core_.sleep(100);                
                 } catch(Exception e) {
                     System.out.println(e.getMessage());
                     System.out.println("Could not set delay in Delay box!");
@@ -169,11 +181,13 @@ public class Acquisition {
                     if (core_.getBytesPerPixel() == 2){
                         short[] pixS = (short[]) img;
                         for (int j = 0; j < dim; j++) {
+                            //accImg[j] = (int) (accImg[j] + (int) (pixS[j]));
                             accImg[j] = (int) (accImg[j] + (int) (pixS[j] & 0xffff));
                         }
                     } else if (core_.getBytesPerPixel() == 1){
                         byte[] pixB = (byte[]) img;
                         for (int j = 0; j < dim; j++) {
+                            //accImg[j] = (int) (accImg[j] + (int) (pixB[j]));
                             accImg[j] = (int) (accImg[j] + (int) (pixB[j] & 0xff));
                         }
                     }
@@ -182,6 +196,15 @@ public class Acquisition {
                 if(binningD>1){
                     accImg=binningByte(accImg, binningD);
                 }   
+                
+                long startTime = System.nanoTime();
+                //REVERSE ENDIAN-NESS
+                for(int idx = 0; idx<dim; idx++){
+                    accImg[idx] = Integer.reverseBytes(accImg[idx]);
+                }
+                long endTime = System.nanoTime();
+                long duration = (endTime - startTime);
+                System.out.println("Endian-ness reversal took: "+ Long.toString(duration));
                 
                 saveLayersToOMETiff(writer, accImg, delays.indexOf(delay));
                 ////

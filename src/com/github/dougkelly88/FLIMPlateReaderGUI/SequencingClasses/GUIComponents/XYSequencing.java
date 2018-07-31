@@ -41,6 +41,8 @@ import java.io.File;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -173,8 +175,12 @@ public class XYSequencing extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int r = fovTable_.getSelectedRow();
-//                FOV fov = tableModel_.getData().get(r);
-                xyzmi_.gotoFOV(tableModel_.getData().get(r));
+                try {
+                    //                FOV fov = tableModel_.getData().get(r);
+                    xyzmi_.gotoFOV(tableModel_.getData().get(r));
+                } catch (Exception ex) {
+                    Logger.getLogger(XYSequencing.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 if (!zAsOffset_){
                     double zval = tableModel_.getData().get(r).getZ();
                     xyzmi_.moveZAbsolute(zval);
@@ -191,8 +197,12 @@ public class XYSequencing extends javax.swing.JPanel {
                     };    
                     
                     if(parent_.checkifAFenabled()){
-                        // If we have gone to the FOV, and have AF, do AF
-                        xyzmi_.customAutofocus(parent_.getAFOffset());
+                        try {
+                            // If we have gone to the FOV, and have AF, do AF
+                            xyzmi_.customAutofocus(parent_.getAFOffset());
+                        } catch (Exception ex) {
+                            Logger.getLogger(XYSequencing.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     } else {
                         // If we don't have AF, go to the 'good offset position'
                         xyzmi_.moveZAbsolute(parent_.getFixedAFDefault());

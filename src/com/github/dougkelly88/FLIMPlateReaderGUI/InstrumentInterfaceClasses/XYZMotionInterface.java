@@ -18,6 +18,7 @@ import mmcorej.DeviceType;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.LUDecomposition;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -63,7 +64,7 @@ public final class XYZMotionInterface {
         transform_ = deriveAffineTransform(xpltWellCentres_, stageWellCentres_);
         
         try{
-            core_.setPosition(zstage_, Double.parseDouble(core_.getProperty("Objective", "Safe Position")));
+            //core_.setPosition(zstage_, Double.parseDouble(core_.getProperty("Objective", "Safe Position")));
             //core_.home(xystage_);
             core_.waitForDeviceType(DeviceType.XYStageDevice);
             gotoFOV(new FOV("C4", pp_, 1000));
@@ -74,17 +75,18 @@ public final class XYZMotionInterface {
     }
     
     public double [] calculateOffsets(){
-        double []ObjOffsets = parent_.getObjectiveOffsets();
-        double []PortOffsets = parent_.getPortOffsets();
-        double []InsertOffsets = parent_.getInsertOffsets();
-        double []Offsets = {0,0,0};
-        for (int i=0;i<3; i++){
-            Offsets[i] = ObjOffsets[i]+PortOffsets[i]+InsertOffsets[i];
-        }
+//        double []ObjOffsets = parent_.getObjectiveOffsets();
+//        double []PortOffsets = parent_.getPortOffsets();
+//        double []InsertOffsets = parent_.getInsertOffsets();
+        
+          double [] Offsets = parent_.returnoffsets();
+//        for (int i=0;i<3; i++){
+//            Offsets[i] = ObjOffsets[i]+PortOffsets[i]+InsertOffsets[i];
+//        }
         return Offsets;
     }
 
-    public int gotoFOV(FOV fov) {
+    public int gotoFOV(FOV fov) throws Exception {
         double[] Offsets = calculateOffsets();
         
         FOV tempfov = fov;
@@ -100,6 +102,7 @@ public final class XYZMotionInterface {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        core_.waitForSystem();
         enableManualXYControls(var_.manStageCheck);
 
         tempfov.setX(fov.getX()-Offsets[0]);
@@ -216,8 +219,11 @@ public final class XYZMotionInterface {
 
     public boolean moveZRelative(double z) {
         try {
-            core_.setRelativePosition(zstage_, z);
+            //core_.setRelativePosition(zstage_, z);
             //parent_.currentFOV_.setZ(z);
+            core_.setFocusDevice("FocusDrive");
+            double currpos = (core_.getPosition(core_.getFocusDevice()));
+            core_.setPosition("FocusDrive", currpos+z);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -230,8 +236,9 @@ public final class XYZMotionInterface {
         try {
             // TODO: check within bounds?
             // TODO: calibrate to make up for lack of parfocality...
-            core_.setPosition(zstage_, z+Offsets[2]);
+            //core_.setPosition(zstage_, z+Offsets[2]);
             //parent_.currentFOV_.setZ(z);
+            core_.setPosition("FocusDrive", z);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -244,7 +251,7 @@ public final class XYZMotionInterface {
         double z = 0.0;
         
         try{
-            z = core_.getPosition(zstage_);
+            z = core_.getPosition(core_.getFocusDevice());
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
@@ -269,59 +276,70 @@ public final class XYZMotionInterface {
     }
     
     public void enableManualZControls(boolean on){
-        try {
-                if (on)
-                    core_.setProperty("OlympusHub", "Control", "Manual + Computer");
-                else {
-                    core_.setProperty("OlympusHub", "Control", "Computer");
-                    double z = core_.getPosition(zstage_);
-                    //parent_.currentFOV_.setZ(z);
-                }
-        } catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-    
+//        try {
+//                if (on)
+//                    core_.setProperty("OlympusHub", "Control", "Manual + Computer");
+//                else {
+//                    core_.setProperty("OlympusHub", "Control", "Computer");
+//                    double z = core_.getPosition(zstage_);
+//                    //parent_.currentFOV_.setZ(z);
+//                }
+//        } catch (Exception e){
+//            System.out.println(e.getMessage());
+//        }
+//    
     }
     
     public void enableManualZOnly(boolean on){
-        try {
-                if (on)
-                    core_.setProperty("ManualFocus", "FocusWheel", "Frame");
-                else {
-                    core_.setProperty("ManualFocus", "FocusWheel", "Off");
-                    double z = core_.getPosition(zstage_);
-                    //parent_.currentFOV_.setZ(z);
-                }
-        } catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-    
+//        try {
+//                if (on)
+//                    core_.setProperty("ManualFocus", "FocusWheel", "Frame");
+//                else {
+//                    core_.setProperty("ManualFocus", "FocusWheel", "Off");
+//                    double z = core_.getPosition(zstage_);
+//                    //parent_.currentFOV_.setZ(z);
+//                }
+//        } catch (Exception e){
+//            System.out.println(e.getMessage());
+//        }
+//    
     }
     
-    public double customAutofocus(Double offset){
+    public double customAutofocus(Double offset) throws Exception{
         Double focusOffset = null;
-        
-        if(var_.autofocusWhich.equals("ZDC Olympus")){
-            try{
-                core_.setProperty("Objective", "Use Safe Position", "0");
-                this.moveZRelative(-offset);
-                core_.setProperty("AutoFocusZDC", "MeasureOffset", "Now");
-                focusOffset = Double.parseDouble(core_.getProperty("AutoFocusZDC", "Offset"));
-            //    this.moveZAbsolute(offset + focusOffset);
-                this.moveZRelative(offset - focusOffset); // Doug
-            //    this.moveZRelative(offset);
-            } catch (Exception e){
-                System.out.println(e.getMessage());
-            }
-        return focusOffset;
-        }
-        else if(var_.autofocusWhich.equals("Definite focus Zeiss")){
-            System.out.println("autofocusComboBox in ProSetting is on Definite focus Zeis. Not implemented yet! Go back to ZDC Olympus.");
-        }
-        else{
-            System.out.println("autofocusComboBox in ProSetting is seeing nothing!");
-        }   
-         return focusOffset;   
+//        
+//        if(var_.autofocusWhich.equals("ZDC Olympus")){
+//            try{
+//                core_.setProperty("Objective", "Use Safe Position", "0");
+//                this.moveZRelative(-offset);
+//                core_.setProperty("AutoFocusZDC", "MeasureOffset", "Now");
+//                focusOffset = Double.parseDouble(core_.getProperty("AutoFocusZDC", "Offset"));
+//            //    this.moveZAbsolute(offset + focusOffset);
+//                this.moveZRelative(offset - focusOffset); // Doug
+//            //    this.moveZRelative(offset);
+//            } catch (Exception e){
+//                System.out.println(e.getMessage());
+//            }
+//        return focusOffset;
+//        }
+//        else if(var_.autofocusWhich.equals("Definite focus Zeiss")){
+//            System.out.println("autofocusComboBox in ProSetting is on Definite focus Zeis. Not implemented yet! Go back to ZDC Olympus.");
+//        }
+//        else{
+//            System.out.println("autofocusComboBox in ProSetting is seeing nothing!");
+//        }   
+         //return focusOffset;   
+         core_.fullFocus();
+         core_.setFocusDevice("FocusDrive");
+         core_.waitForSystem();
+         //TimeUnit.SECONDS.sleep(1);
+         double offsethere = 20.0;
+         double currpos = (core_.getPosition(core_.getFocusDevice()));
+         double finpos = currpos+offsethere+offset;
+         core_.setPosition("FocusDrive", finpos);
+         core_.waitForSystem();
+         
+         return 0.0;
     }
     
     public void runInitializationRitual(){

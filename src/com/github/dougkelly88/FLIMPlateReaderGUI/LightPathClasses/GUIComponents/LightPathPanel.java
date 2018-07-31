@@ -54,6 +54,7 @@ public class LightPathPanel extends javax.swing.JPanel {
     private String [] [] PortOffsetInfo;
     public boolean ObjOffsetsloaded;
     public boolean PortOffsetsloaded;
+    double [] offsets = {0,0,0};
     
     // TODO: replace var_ stuff with currentLightPath_
 //    private SequencedAcquisitionProperties sap_;
@@ -93,10 +94,16 @@ public class LightPathPanel extends javax.swing.JPanel {
         return info.split("##");
     }
     
+    public double [] returnoffsets(){
+        offsets[0] = Double.parseDouble(this.xOffset.getText());
+        offsets[1] = Double.parseDouble(this.yOffset.getText());
+        return offsets;
+    }
+    
     public void LoadJSONObjOffsets(){
         // Show a warning if the objectives loaded don't match the ones stored in Micro-manager?
         int num_props = 4; //Name, Xoff, Yoff, Zoff
-        ObjectiveOffsetInfo = new String [objectiveComboBox.getItemCount()] [num_props];
+//        ObjectiveOffsetInfo = new String [objectiveComboBox.getItemCount()] [num_props];
         
         Gson gson = new Gson();
         //Load the file with the stored offsets
@@ -108,24 +115,24 @@ public class LightPathPanel extends javax.swing.JPanel {
         } catch (Exception e) {
             JSONInString = "FAIL";
         }
-        Objective_object[] objs = gson.fromJson(JSONInString, Objective_object[].class);
-        for(int i=0;i<objs.length;i++){
-                ObjectiveOffsetInfo[i] [0] = objs[i].getObjectiveName();
-                ObjectiveOffsetInfo[i] [1] = objs[i].getObjectiveOffsets()[0].toString();
-                ObjectiveOffsetInfo[i] [2] = objs[i].getObjectiveOffsets()[1].toString();
-                ObjectiveOffsetInfo[i] [3] = objs[i].getObjectiveOffsets()[2].toString();
-                System.out.println(ObjectiveOffsetInfo[i]);
-        }
+//        Objective_object[] objs = gson.fromJson(JSONInString, Objective_object[].class);
+//        for(int i=0;i<objs.length;i++){
+//                ObjectiveOffsetInfo[i] [0] = objs[i].getObjectiveName();
+//                ObjectiveOffsetInfo[i] [1] = objs[i].getObjectiveOffsets()[0].toString();
+//                ObjectiveOffsetInfo[i] [2] = objs[i].getObjectiveOffsets()[1].toString();
+//                ObjectiveOffsetInfo[i] [3] = objs[i].getObjectiveOffsets()[2].toString();
+//                System.out.println(ObjectiveOffsetInfo[i]);
+//        }
         String mismatchedObj = "";
         String explanationstring = "The following objective(s) listed in micro-manager offsets are not matched to the objectives listed in the saved Objective Offsets file - please fix this:\n\n";
-        for(int i=0;i<objectiveComboBox.getItemCount();i++){
-            if (ObjectiveOffsetInfo[i] [0].equals(objectiveComboBox.getItemAt(i).toString())){
-                mismatchedObj=mismatchedObj.concat("0");
-            } else {
-                mismatchedObj=mismatchedObj.concat("1");
-                explanationstring=explanationstring.concat(objectiveComboBox.getItemAt(i).toString()+" is stored in the file as "+ObjectiveOffsetInfo[i] [0]+"\n");
-            }
-        }
+//        for(int i=0;i<objectiveComboBox.getItemCount();i++){
+//            if (ObjectiveOffsetInfo[i] [0].equals(objectiveComboBox.getItemAt(i).toString())){
+//                mismatchedObj=mismatchedObj.concat("0");
+//            } else {
+//                mismatchedObj=mismatchedObj.concat("1");
+//                explanationstring=explanationstring.concat(objectiveComboBox.getItemAt(i).toString()+" is stored in the file as "+ObjectiveOffsetInfo[i] [0]+"\n");
+//            }
+//        }
         if(Integer.parseInt((String)mismatchedObj)>0){
             // if we have a case where an objective name doesn't match the file...
             System.out.println(explanationstring);
@@ -149,7 +156,7 @@ public class LightPathPanel extends javax.swing.JPanel {
     public void LoadJSONPortOffsets(){
         // Show a warning if the objectives loaded don't match the ones stored in Micro-manager?
         int num_props = 4; //Name, Xoff, Yoff, Zoff
-        PortOffsetInfo = new String [switchPortComboBox.getItemCount()] [num_props];
+        //PortOffsetInfo = new String [switchPortComboBox.getItemCount()] [num_props];
         
         Gson gson = new Gson();
         //Load the file with the stored offsets
@@ -170,14 +177,14 @@ public class LightPathPanel extends javax.swing.JPanel {
         }
         String mismatchedPort = "";
         String explanationstring = "The following objective(s) listed in micro-manager offsets are not matched to the ports listed in the saved Port Offsets file - please fix this:\n\n";
-        for(int i=0;i<switchPortComboBox.getItemCount();i++){
-            if (PortOffsetInfo[i] [0].equals(switchPortComboBox.getItemAt(i).toString())){
-                mismatchedPort=mismatchedPort.concat("0");
-            } else {
-                mismatchedPort=mismatchedPort.concat("1");
-                explanationstring=explanationstring.concat(switchPortComboBox.getItemAt(i).toString()+" is stored in the file as: "+PortOffsetInfo[i] [0]+"\n");
-            }
-        }
+//        for(int i=0;i<switchPortComboBox.getItemCount();i++){
+//            if (PortOffsetInfo[i] [0].equals(switchPortComboBox.getItemAt(i).toString())){
+//                mismatchedPort=mismatchedPort.concat("0");
+//            } else {
+//                mismatchedPort=mismatchedPort.concat("1");
+//                explanationstring=explanationstring.concat(switchPortComboBox.getItemAt(i).toString()+" is stored in the file as: "+PortOffsetInfo[i] [0]+"\n");
+//            }
+//        }
         if(Integer.parseInt((String)mismatchedPort)>0){
             // if we have a case where an objective name doesn't match the file...
             System.out.println(explanationstring);
@@ -247,6 +254,7 @@ public class LightPathPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jOptionPane1 = new javax.swing.JOptionPane();
         excitationSource = new javax.swing.JPanel();
         laserToggle = new javax.swing.JToggleButton();
         outputPowerPanel = new javax.swing.JPanel();
@@ -255,27 +263,11 @@ public class LightPathPanel extends javax.swing.JPanel {
         laserSerialNumberLabel = new javax.swing.JLabel();
         laserRunTimeLabel = new javax.swing.JLabel();
         ledToggle = new javax.swing.JToggleButton();
-        Filters = new javax.swing.JPanel();
-        ndFWComboBox = new javax.swing.JComboBox<String>();
-        excitationComboBox = new javax.swing.JComboBox<String>();
-        dichroicComboBox = new javax.swing.JComboBox<String>();
-        emissionComboBox = new javax.swing.JComboBox<String>();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        Olympus = new javax.swing.JPanel();
-        objectiveComboBox = new javax.swing.JComboBox<String>();
-        filterCubeComboBox = new javax.swing.JComboBox<String>();
-        switchPortComboBox = new javax.swing.JComboBox<String>();
-        ObjectiveLabel = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         Camera = new javax.swing.JPanel();
         cameraPixelSize = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        camChooser = new javax.swing.JComboBox<String>();
+        camChooser = new javax.swing.JComboBox<>();
         ContinusouseFilterWheel = new javax.swing.JPanel();
         continuouseFWPanel = new javax.swing.JPanel();
         wakeButton = new javax.swing.JButton();
@@ -283,6 +275,10 @@ public class LightPathPanel extends javax.swing.JPanel {
         stepLeftButton = new javax.swing.JButton();
         steprightButton = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        xOffset = new javax.swing.JTextField();
+        yOffset = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         excitationSource.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Excitation source"));
 
@@ -362,150 +358,6 @@ public class LightPathPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        Filters.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Filters"));
-
-        ndFWComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        ndFWComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ndFWComboBoxActionPerformed(evt);
-            }
-        });
-
-        excitationComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        excitationComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                excitationComboBoxActionPerformed(evt);
-            }
-        });
-
-        dichroicComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        dichroicComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dichroicComboBoxActionPerformed(evt);
-            }
-        });
-
-        emissionComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        emissionComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                emissionComboBoxActionPerformed(evt);
-            }
-        });
-
-        jLabel1.setText("Neutral density");
-
-        jLabel2.setText("Excitation");
-
-        jLabel3.setText("Dichroic");
-
-        jLabel4.setText("Emission");
-
-        javax.swing.GroupLayout FiltersLayout = new javax.swing.GroupLayout(Filters);
-        Filters.setLayout(FiltersLayout);
-        FiltersLayout.setHorizontalGroup(
-            FiltersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(FiltersLayout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addGroup(FiltersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(ndFWComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(FiltersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(excitationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addGap(18, 18, 18)
-                .addGroup(FiltersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dichroicComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addGap(18, 18, 18)
-                .addGroup(FiltersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addComponent(emissionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        FiltersLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {dichroicComboBox, emissionComboBox, excitationComboBox, ndFWComboBox});
-
-        FiltersLayout.setVerticalGroup(
-            FiltersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(FiltersLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(FiltersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(FiltersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ndFWComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(excitationComboBox)
-                    .addComponent(dichroicComboBox)
-                    .addComponent(emissionComboBox))
-                .addContainerGap())
-        );
-
-        Olympus.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Olympus"));
-
-        objectiveComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        objectiveComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                objectiveComboBoxActionPerformed(evt);
-            }
-        });
-
-        filterCubeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        filterCubeComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                filterCubeComboBoxActionPerformed(evt);
-            }
-        });
-
-        switchPortComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        switchPortComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                switchPortComboBoxActionPerformed(evt);
-            }
-        });
-
-        ObjectiveLabel.setText("Objective");
-
-        jLabel6.setText("Filter Cube");
-
-        jLabel7.setText("Output port");
-
-        javax.swing.GroupLayout OlympusLayout = new javax.swing.GroupLayout(Olympus);
-        Olympus.setLayout(OlympusLayout);
-        OlympusLayout.setHorizontalGroup(
-            OlympusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(OlympusLayout.createSequentialGroup()
-                .addGap(44, 44, 44)
-                .addGroup(OlympusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ObjectiveLabel)
-                    .addComponent(objectiveComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 29, Short.MAX_VALUE)
-                .addGroup(OlympusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
-                    .addComponent(filterCubeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 29, Short.MAX_VALUE)
-                .addGroup(OlympusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7)
-                    .addComponent(switchPortComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(23, Short.MAX_VALUE))
-        );
-        OlympusLayout.setVerticalGroup(
-            OlympusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(OlympusLayout.createSequentialGroup()
-                .addGroup(OlympusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ObjectiveLabel)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(OlympusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(objectiveComboBox)
-                    .addComponent(filterCubeComboBox)
-                    .addComponent(switchPortComboBox)))
-        );
-
         Camera.setBorder(javax.swing.BorderFactory.createTitledBorder("Camera"));
 
         cameraPixelSize.setText("6.45");
@@ -519,7 +371,7 @@ public class LightPathPanel extends javax.swing.JPanel {
 
         jLabel8.setText("um");
 
-        camChooser.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        camChooser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         camChooser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 camChooserActionPerformed(evt);
@@ -653,25 +505,58 @@ public class LightPathPanel extends javax.swing.JPanel {
                 .addComponent(continuouseFWPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        xOffset.setText("-3000");
+        xOffset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                xOffsetActionPerformed(evt);
+            }
+        });
+
+        yOffset.setText("1000");
+        yOffset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                yOffsetActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("x offset");
+
+        jLabel2.setText("y offset");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Olympus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(Filters, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(excitationSource, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(Camera, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(ContinusouseFilterWheel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(xOffset, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32)
+                        .addComponent(yOffset, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jLabel1)
+                        .addGap(52, 52, 52)
+                        .addComponent(jLabel2)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(excitationSource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Filters, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Olympus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(xOffset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(yOffset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(101, 101, 101)
                 .addComponent(Camera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ContinusouseFilterWheel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -693,12 +578,12 @@ public class LightPathPanel extends javax.swing.JPanel {
                 } catch (Exception ex) {
             Logger.getLogger(HCAFLIMPluginFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-            if(switchPortComboBox.getSelectedIndex()==0){
-                setBy(switchPortComboBox, "LightPathPrism", "Side Port");
-                switchPortComboBox.setSelectedItem("Side Port");
-                currentLightPath_.setPortLabel((String) switchPortComboBox.getSelectedItem());
-                var_.SwitchPortComboBoxSelectedItem = (String) switchPortComboBox.getSelectedItem();
-                }
+//            if(switchPortComboBox.getSelectedIndex()==0){
+//                setBy(switchPortComboBox, "LightPathPrism", "Side Port");
+//                switchPortComboBox.setSelectedItem("Side Port");
+//                currentLightPath_.setPortLabel((String) switchPortComboBox.getSelectedItem());
+//                var_.SwitchPortComboBoxSelectedItem = (String) switchPortComboBox.getSelectedItem();
+//                }
         } else {
             laserToggle.setText("Turn laser ON");
             
@@ -711,57 +596,6 @@ public class LightPathPanel extends javax.swing.JPanel {
         }
 
     }//GEN-LAST:event_laserToggleActionPerformed
-
-    private void dichroicComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dichroicComboBoxActionPerformed
-        setByLabel(dichroicComboBox, "CSUX-Dichroic Mirror");
-        currentLightPath_.setDichroicLabel((String) dichroicComboBox.getSelectedItem());
-        var_.DichroicComboBoxSelectedItem = (String) dichroicComboBox.getSelectedItem();
-    }//GEN-LAST:event_dichroicComboBoxActionPerformed
-
-    private void ndFWComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ndFWComboBoxActionPerformed
-        setByLabel(ndFWComboBox, "NDFW");
-        currentLightPath_.setNdFilterLabel((String) ndFWComboBox.getSelectedItem());
-        var_.NDFWComboBoxSelectedItem = (String) ndFWComboBox.getSelectedItem();
-    }//GEN-LAST:event_ndFWComboBoxActionPerformed
-
-    private void excitationComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excitationComboBoxActionPerformed
-        setByLabel(excitationComboBox, "SpectralFW");
-        currentLightPath_.setExFilterLabel((String) excitationComboBox.getSelectedItem());
-        var_.ExcitationComboBoxSelectedItem = (String) excitationComboBox.getSelectedItem();
-    }//GEN-LAST:event_excitationComboBoxActionPerformed
-
-    private void emissionComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emissionComboBoxActionPerformed
-        setByLabel(emissionComboBox, "CSUX-Filter Wheel");
-        currentLightPath_.setEmFilterLabel((String) emissionComboBox.getSelectedItem());
-        var_.EmissionComboBoxSelectedItem = (String) emissionComboBox.getSelectedItem();
-    }//GEN-LAST:event_emissionComboBoxActionPerformed
-
-    private void objectiveComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_objectiveComboBoxActionPerformed
-        double [] OldOffsets = getObjectiveOffsets();
-        
-        setByLabel(objectiveComboBox, "Objective");
-        currentLightPath_.setObjectiveLabel((String) objectiveComboBox.getSelectedItem());
-        var_.ObjectiveComboBoxSelectedItem = (String) objectiveComboBox.getSelectedItem();
-        int whichobj = objectiveComboBox.getSelectedIndex();
-        if (ObjOffsetsloaded == true){
-            //get the offsets here...
-            
-            double [] NewOffsets = {Double.parseDouble(ObjectiveOffsetInfo[whichobj] [1]),Double.parseDouble(ObjectiveOffsetInfo[whichobj] [2]),Double.parseDouble(ObjectiveOffsetInfo[whichobj] [3])}; // placeholder
-            setObjectiveOffsets(NewOffsets);
-
-
-            //Shift the stage to account for the objetive change
-            double [] Shifts = {0,0,0};
-            for (int i=0;i<=2;i++){
-                Shifts[i] = NewOffsets[i]-OldOffsets[i];
-            }
-            parent_.xyzmi_.moveXYRelative(Shifts[0], Shifts[1]); // ignoring Z for now
-        }
-                
-        if ((String) objectiveComboBox.getSelectedItem()!=null){
-                setMag((String) objectiveComboBox.getSelectedItem());
-        }
-    }//GEN-LAST:event_objectiveComboBoxActionPerformed
 
 //    public void setMag(String magString){
 //        
@@ -883,51 +717,11 @@ public class LightPathPanel extends javax.swing.JPanel {
         // ref: http://stackoverflow.com/questions/1102891/how-to-check-if-a-string-is-a-numeric-type-in-java
     }
 
-    private void filterCubeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterCubeComboBoxActionPerformed
-        setByLabel(filterCubeComboBox, "FilterCube");
-        currentLightPath_.setFilterCubeLabel((String) filterCubeComboBox.getSelectedItem());
-        var_.FilterCubeComboBoxSelectedItem = (String) filterCubeComboBox.getSelectedItem();
-    }//GEN-LAST:event_filterCubeComboBoxActionPerformed
-
-    private void switchPortComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchPortComboBoxActionPerformed
-        double [] OldOffsets = getPortOffsets();
-        
-        setByLabel(switchPortComboBox, "LightPathPrism");
-        currentLightPath_.setPortLabel((String) switchPortComboBox.getSelectedItem());
-        var_.SwitchPortComboBoxSelectedItem = (String) switchPortComboBox.getSelectedItem();
-        int whichport = switchPortComboBox.getSelectedIndex();
-        
-        if (PortOffsetsloaded == true){
-            //get the offsets here...
-            
-            double [] NewOffsets = {Double.parseDouble(PortOffsetInfo[whichport] [1]),Double.parseDouble(PortOffsetInfo[whichport] [2]),Double.parseDouble(PortOffsetInfo[whichport] [3])}; // placeholder
-            setPortOffsets(NewOffsets);
-
-
-            //Shift the stage to account for the objetive change
-            double [] Shifts = {0,0,0};
-            for (int i=0;i<=2;i++){
-                Shifts[i] = NewOffsets[i]-OldOffsets[i];
-            }
-            parent_.xyzmi_.moveXYRelative(Shifts[0], Shifts[1]); // ignoring Z for now
-        }
-        
-        if(switchPortComboBox.getSelectedIndex()==0){
-           laserToggle.setText("Turn laser ON");
-            try {
-                arduino_.setDigitalOutLow();
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        }
-        
-    }//GEN-LAST:event_switchPortComboBoxActionPerformed
-
     private void ledToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ledToggleActionPerformed
         
         if (ledToggle.isSelected()) {
             try {
-                core_.setProperty("LightPathPrism", "Label", (String) switchPortComboBox.getSelectedItem());
+//                core_.setProperty("LightPathPrism", "Label", (String) switchPortComboBox.getSelectedItem());
             } catch (Exception ex) {
                 System.out.println("Not setting property for device LightPathPrism because combo hasn't yet been populated (setByLabel method)");
             }
@@ -1013,6 +807,14 @@ public class LightPathPanel extends javax.swing.JPanel {
         gui_.refreshGUI();
     }//GEN-LAST:event_camChooserActionPerformed
 
+    private void xOffsetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xOffsetActionPerformed
+        parent_.xyzmi_.calculateOffsets();
+    }//GEN-LAST:event_xOffsetActionPerformed
+
+    private void yOffsetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yOffsetActionPerformed
+        parent_.xyzmi_.calculateOffsets();
+    }//GEN-LAST:event_yOffsetActionPerformed
+
     public void setByLabel(JComboBox combo, String device) {
         try {
             String setval = (String) combo.getSelectedItem();
@@ -1045,39 +847,39 @@ public class LightPathPanel extends javax.swing.JPanel {
 
     public void setLoadedSoftwareValues() {
         // searching label of prperty in SoftwareConfig and set values in LightPathControls
-        dichroicComboBox.setSelectedItem(var_.findLabelOfProperty("Dichroic"));
-        emissionComboBox.setSelectedItem(var_.findLabelOfProperty("Emission"));
-        ndFWComboBox.setSelectedItem(var_.findLabelOfProperty("Neutral Density Filter"));
-        excitationComboBox.setSelectedItem(var_.findLabelOfProperty("Excitation"));
-        objectiveComboBox.setSelectedItem(var_.findLabelOfProperty("Objective"));
-        filterCubeComboBox.setSelectedItem(var_.findLabelOfProperty("Filter Cube"));
-        switchPortComboBox.setSelectedItem(var_.findLabelOfProperty("Light Path Prism"));
+//        dichroicComboBox.setSelectedItem(var_.findLabelOfProperty("Dichroic"));
+//        emissionComboBox.setSelectedItem(var_.findLabelOfProperty("Emission"));
+//        ndFWComboBox.setSelectedItem(var_.findLabelOfProperty("Neutral Density Filter"));
+//        excitationComboBox.setSelectedItem(var_.findLabelOfProperty("Excitation"));
+//        objectiveComboBox.setSelectedItem(var_.findLabelOfProperty("Objective"));
+//        filterCubeComboBox.setSelectedItem(var_.findLabelOfProperty("Filter Cube"));
+//        switchPortComboBox.setSelectedItem(var_.findLabelOfProperty("Light Path Prism"));
     }
 
     public void setLoadedHardwareValues() {
         //Intensity (NDFW) Load
-        populateComboBoxes(ndFWComboBox, "NDFW");
+//        populateComboBoxes(ndFWComboBox, "NDFW");
 
         //Excitation (SpectralFW) Load
-        populateComboBoxes(excitationComboBox, "SpectralFW");
+//        populateComboBoxes(excitationComboBox, "SpectralFW");
 
         //Dichroic Load
-        populateComboBoxes(dichroicComboBox, "CSUX-Dichroic Mirror");
+//        populateComboBoxes(dichroicComboBox, "CSUX-Dichroic Mirror");
 
         //Emission Load
-        populateComboBoxes(emissionComboBox, "CSUX-Filter Wheel");
+//        populateComboBoxes(emissionComboBox, "CSUX-Filter Wheel");
 
         //FilterCube Load
-        populateComboBoxes(filterCubeComboBox, "FilterCube");
+//        populateComboBoxes(filterCubeComboBox, "FilterCube");
 
         //Objective Load
-        populateComboBoxes(objectiveComboBox, "Objective");
+//        populateComboBoxes(objectiveComboBox, "Objective");
         //Then load the offset values
-        LoadJSONObjOffsets();
+        //LoadJSONObjOffsets();
         
         //SwitchPort Load
-        populateComboBoxes(switchPortComboBox, "LightPathPrism");
-        LoadJSONPortOffsets();
+//        populateComboBoxes(switchPortComboBox, "LightPathPrism");
+        //LoadJSONPortOffsets();
         
         //GET CAMERAS
         getConfiguredCameras();
@@ -1126,27 +928,27 @@ public class LightPathPanel extends javax.swing.JPanel {
         // make configurable? for now, use indices
         // rather than labels to avoid breaking things...
         // REMEMBER THAT COMBO BOXES END UP ORDERED!
-        if (dichroicComboBox.isEnabled()) {
-            dichroicComboBox.setSelectedIndex(1);
-        }
-        if (emissionComboBox.isEnabled()) {
-            emissionComboBox.setSelectedIndex(2);
-        }
-        if (ndFWComboBox.isEnabled()) {
-            ndFWComboBox.setSelectedIndex(5);
-        }
-        if (excitationComboBox.isEnabled()) {
-            excitationComboBox.setSelectedIndex(1);
-        }
-        if (objectiveComboBox.isEnabled()) {
-            objectiveComboBox.setSelectedIndex(1);
-        }
-        if (filterCubeComboBox.isEnabled()) {
-            filterCubeComboBox.setSelectedIndex(1);
-        }
-        if (switchPortComboBox.isEnabled()) {
-            switchPortComboBox.setSelectedIndex(1);
-        }
+//        if (dichroicComboBox.isEnabled()) {
+//            dichroicComboBox.setSelectedIndex(1);
+//        }
+//        if (emissionComboBox.isEnabled()) {
+//            emissionComboBox.setSelectedIndex(2);
+//        }
+//        if (ndFWComboBox.isEnabled()) {
+//            ndFWComboBox.setSelectedIndex(5);
+//        }
+//        if (excitationComboBox.isEnabled()) {
+//            excitationComboBox.setSelectedIndex(1);
+//        }
+//        if (objectiveComboBox.isEnabled()) {
+//            objectiveComboBox.setSelectedIndex(1);
+//        }
+//        if (filterCubeComboBox.isEnabled()) {
+//            filterCubeComboBox.setSelectedIndex(1);
+//        }
+//        if (switchPortComboBox.isEnabled()) {
+//            switchPortComboBox.setSelectedIndex(1);
+//        }
         
     }
 
@@ -1206,7 +1008,7 @@ public class LightPathPanel extends javax.swing.JPanel {
     
     public void updatePanel(){
          // do something when LightPathPanel is selected
-        objectiveComboBox.setSelectedItem(var_.ObjectiveComboBoxSelectedItem);
+//        objectiveComboBox.setSelectedItem(var_.ObjectiveComboBoxSelectedItem);
     }
     
     public void setLaserToggleFalse(){
@@ -1245,40 +1047,29 @@ public class LightPathPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Camera;
     private javax.swing.JPanel ContinusouseFilterWheel;
-    private javax.swing.JPanel Filters;
-    private javax.swing.JLabel ObjectiveLabel;
-    private javax.swing.JPanel Olympus;
     private javax.swing.JComboBox<String> camChooser;
     private javax.swing.JTextField cameraPixelSize;
     private javax.swing.JPanel continuouseFWPanel;
-    private javax.swing.JComboBox<String> dichroicComboBox;
-    private javax.swing.JComboBox<String> emissionComboBox;
-    private javax.swing.JComboBox<String> excitationComboBox;
     private javax.swing.JPanel excitationSource;
-    private javax.swing.JComboBox<String> filterCubeComboBox;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JOptionPane jOptionPane1;
     private javax.swing.JLabel laserRepRateLabel;
     private javax.swing.JLabel laserRunTimeLabel;
     private javax.swing.JLabel laserSerialNumberLabel;
     private javax.swing.JLabel laserTemperatureLabel;
     private javax.swing.JToggleButton laserToggle;
     private javax.swing.JToggleButton ledToggle;
-    private javax.swing.JComboBox<String> ndFWComboBox;
-    public javax.swing.JComboBox<String> objectiveComboBox;
     private javax.swing.JPanel outputPowerPanel;
     private javax.swing.JButton sleepButton;
     private javax.swing.JButton stepLeftButton;
     private javax.swing.JButton steprightButton;
-    private javax.swing.JComboBox<String> switchPortComboBox;
     private javax.swing.JButton wakeButton;
+    private javax.swing.JTextField xOffset;
+    private javax.swing.JTextField yOffset;
     // End of variables declaration//GEN-END:variables
 
 }

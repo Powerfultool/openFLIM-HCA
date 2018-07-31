@@ -155,6 +155,8 @@ public class HCAFLIMPluginFrame extends javax.swing.JFrame {
     private double[] prefindVcentres;
     private double camerapixelsize;
     
+    public double Del_box_comm_wait = 100;
+    
     private boolean testmode;
     public boolean FOVNudgeMode;
     
@@ -281,6 +283,10 @@ public class HCAFLIMPluginFrame extends javax.swing.JFrame {
     
     public double getRelayMag(){
         return 0.7;// this.proSettingsGUI1.getRelayMag();
+    }
+    
+    public double get_HRI_comm_delay(){
+        return this.proSettingsGUI1.get_Del_box_comm_wait();
     }
     
     public boolean getTestmode(){
@@ -2045,6 +2051,11 @@ public class HCAFLIMPluginFrame extends javax.swing.JFrame {
         progressBar_.setColor(2);
         terminate=false;
         stopSequenceButton.setSelected(false);
+    }
+    
+    public double [] returnoffsets(){
+        double [] offsets = this.lightPathControls1.returnoffsets();
+        return offsets;
     }
     
     public void prefindButtonPressed(){
