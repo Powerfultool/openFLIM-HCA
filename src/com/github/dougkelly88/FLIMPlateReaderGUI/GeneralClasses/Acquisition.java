@@ -49,6 +49,7 @@ public class Acquisition {
     CoreMetadata cm;
     private HCAFLIMPluginFrame frame_;
     public boolean bleechingComp=false;
+    public double HRI_comm_wait = 100.0;
     
     public Acquisition() {
         gui_ = MMStudio.getInstance();
@@ -74,7 +75,7 @@ public class Acquisition {
                 try{
                 core_.setProperty("Delay box", "Delay (ps)", delay);
                 //####BAD SLEEP###
-                core_.sleep(100);
+                core_.sleep((int) Math.round(frame_.Del_box_comm_wait));  
                 } catch(Exception e) {
                     System.out.println(e.getMessage());
                     System.out.println("Could not set delay in Delay box!");
@@ -157,7 +158,8 @@ public class Acquisition {
                 try{
                 core_.setProperty("Delay box", "Delay (ps)", delay);
                 //####BAD SLEEP###
-                core_.sleep(100);                
+                frame_.
+                core_.sleep((int) Math.round(frame_.Del_box_comm_wait));                
                 } catch(Exception e) {
                     System.out.println(e.getMessage());
                     System.out.println("Could not set delay in Delay box!");

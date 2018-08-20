@@ -155,7 +155,7 @@ public class HCAFLIMPluginFrame extends javax.swing.JFrame {
     private double[] prefindVcentres;
     private double camerapixelsize;
     
-    public double Del_box_comm_wait = 100;
+    public double Del_box_comm_wait = 100.0;
     
     private boolean testmode;
     public boolean FOVNudgeMode;
@@ -277,6 +277,10 @@ public class HCAFLIMPluginFrame extends javax.swing.JFrame {
         return core_;
     }
     
+    public void update_HRI_comm_wait(double new_wait_val){
+        Del_box_comm_wait = new_wait_val;
+    }
+    
     public void setRelayMag(double relay_mag){
         //this.proSettingsGUI1.setRelayMag(relay_mag);
     }
@@ -288,7 +292,7 @@ public class HCAFLIMPluginFrame extends javax.swing.JFrame {
     public double get_HRI_comm_delay(){
         return this.proSettingsGUI1.get_Del_box_comm_wait();
     }
-    
+        
     public boolean getTestmode(){
         return this.testmode;
     }

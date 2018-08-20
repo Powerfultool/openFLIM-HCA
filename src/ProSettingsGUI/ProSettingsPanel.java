@@ -812,7 +812,7 @@ public class ProSettingsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_SpecialAcquistionTickBoxActionPerformed
 
     private void del_box_comm_waitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_del_box_comm_waitActionPerformed
-        parent_.Del_box_comm_wait = get_RelayMag();
+        parent_.update_HRI_comm_wait(get_Del_box_comm_wait());
     }//GEN-LAST:event_del_box_comm_waitActionPerformed
 
     public double getHshiftscale(){
@@ -851,8 +851,8 @@ public class ProSettingsPanel extends javax.swing.JPanel {
         return Objectives;
     }
 
-    public double get_RelayMag(){
-        return Double.parseDouble(this.del_box_comm_wait.getText());
+    public double get_Del_box_comm_wait(){
+        return Double.parseDouble(del_box_comm_wait.getText());
     }
     
     public Objective readObjectiveProperties (JsonReader reader) throws IOException {

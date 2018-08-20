@@ -66,7 +66,7 @@ public class FLIMPanel extends javax.swing.JPanel {
     boolean calibrationDelayBoxYesNo=true;
     private HCAFLIMPluginFrame frame;
     public Thread findMaxPointThread;
-    
+   
     
     @Subscribe
     public PropertyChangedEvent onPropertyChanged(PropertyChangedEvent event)
@@ -877,7 +877,7 @@ public class FLIMPanel extends javax.swing.JPanel {
                    break;
                 }
                     core_.setProperty("Delay box", "Delay (ps)", delay);
-                    core_.sleep(200);
+                    core_.sleep((int) Math.round(frame.Del_box_comm_wait));
                     meanValues.add(fm_.getMeanValueOfImage(core_));
                     delays.add(delay);
                     frame.progressBar_.stepIncrement(delay-findMaxPointMin, findMaxPointMax-findMaxPointMin);
