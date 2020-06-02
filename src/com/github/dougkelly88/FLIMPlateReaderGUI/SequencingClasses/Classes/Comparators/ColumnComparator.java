@@ -39,20 +39,20 @@ public class ColumnComparator implements Comparator<SeqAcqSetup>{
             String col1_pad = Utilitiesclass.padLeadingZeros(col1, padded_length);
             String col2_pad = Utilitiesclass.padLeadingZeros(col2, padded_length);
             if("None".equals(o1.getSnaketype())){
-                return 0;   
+                return 0;
             }
             else if("Vertical".equals(o1.getSnaketype())){
-                return col1_pad.compareTo(col2_pad);  
+                return col1_pad.compareTo(col2_pad);
             }
             else if("Horizontal".equals(o1.getSnaketype())){
                 //Determine if row is 'Even'
                 int rownum = utilities_.WellLetterstoNumber(wellref1[0]);
                 if(0!=rownum%2){
-                    return col1_pad.compareTo(col2_pad);   
+                    return col1_pad.compareTo(col2_pad);
                 }
                 else{
                     //Reversing order of operands should invert sort direction
-                    return col2_pad.compareTo(col1_pad);                       
+                    return col2_pad.compareTo(col1_pad);
                 }
             }
             else{
