@@ -15,6 +15,7 @@ import com.github.dougkelly88.FLIMPlateReaderGUI.GeneralClasses.Variable;
 import com.github.dougkelly88.FLIMPlateReaderGUI.GeneralClasses.snapFlimImageThread;
 import com.github.dougkelly88.FLIMPlateReaderGUI.GeneralClasses.Prefind;
 import com.github.dougkelly88.FLIMPlateReaderGUI.GeneralClasses.GeneralUtilities;
+import com.github.dougkelly88.FLIMPlateReaderGUI.GeneralClasses.parse_JSON;
 import com.github.dougkelly88.FLIMPlateReaderGUI.GeneralClasses.prefindThread;
 import com.github.dougkelly88.FLIMPlateReaderGUI.InstrumentInterfaceClasses.XYZMotionInterface;
 import com.github.dougkelly88.FLIMPlateReaderGUI.SequencingClasses.Classes.AcqOrderTableModel;
@@ -80,7 +81,6 @@ import javax.swing.event.TableModelListener;
 import mmcorej.DeviceType;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
-
 // Stuff for saving XYZ positions as JSON objects
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -106,6 +106,9 @@ import ij.ImagePlus;
 import java.awt.geom.Point2D;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.util.HashMap;
+import org.micromanager.api.MultiStagePosition;
+import org.micromanager.api.PositionList;
 //import ij.plugin.*; // Was unused?
 //import java.lang.Math; // Was unused?
 //import java.awt.image.*; // Was unused?
@@ -113,6 +116,8 @@ import java.nio.file.Files;
 //import ij.text.*; // Was unused?
 //import ij.plugin.filter.*; // Was unused?
 import org.micromanager.utils.ImageUtils;
+import org.micromanager.utils.MMException;
+import org.micromanager.utils.MMScriptException;
 // End of added imageJ bits
 
 /**
@@ -159,6 +164,8 @@ public class HCAFLIMPluginFrame extends javax.swing.JFrame {
     
     private boolean testmode;
     public boolean FOVNudgeMode;
+    
+    private parse_JSON json_parse_class;    
     
     private ArrayList<String> initLDWells = new ArrayList<String>();
     // Replaces private ArrayList<String> initLDWells = new ArrayList<String>();
@@ -216,15 +223,15 @@ public class HCAFLIMPluginFrame extends javax.swing.JFrame {
         lightPathControls1.setLoadedHardwareValues();
         
         setupSequencingTable();
-        xYZPanel1.setupAFParams(this);
-        
-        //Automatically wanted a try/catch here?
-        try {
-            lastAFposition = Double.parseDouble(core_.getProperty("Objective", "Safe Position")); // Bottom out the default AF position
-        } catch (Exception ex) {
-            lastAFposition = 3000;            
-            // Logger.getLogger(HCAFLIMPluginFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        xYZPanel1.setupAFParams(this);
+//        
+//        //Automatically wanted a try/catch here?
+//        try {
+//            lastAFposition = Double.parseDouble(core_.getProperty("Objective", "Safe Position")); // Bottom out the default AF position
+//        } catch (Exception ex) {
+//            lastAFposition = 3000;            
+//            // Logger.getLogger(HCAFLIMPluginFrame.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         fLIMPanel1.setDelayComboBox();
         
         //displayImage2_ = DisplayImage2.getInstance();
@@ -271,6 +278,18 @@ public class HCAFLIMPluginFrame extends javax.swing.JFrame {
         this.lightPathControls1.ObjOffsetsloaded=true;
         this.lightPathControls1.PortOffsetsloaded=true;
         FOVNudgeMode = false;
+        
+        //MOVED FROM EARLIER COPY
+        xYZPanel1.setupAFParams(this);
+        
+        //Automatically wanted a try/catch here?
+        try {
+            lastAFposition = Double.parseDouble(core_.getProperty("Objective", "Safe Position")); // Bottom out the default AF position
+        } catch (Exception ex) {
+            lastAFposition = 3000;            
+            // Logger.getLogger(HCAFLIMPluginFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+        this.proSettingsGUI1.setParent(this);
     }
 
     public CMMCore getCore() {
@@ -413,6 +432,90 @@ public class HCAFLIMPluginFrame extends javax.swing.JFrame {
             }
         }
     
+    }    
+    
+    
+    public HashMap<String, Object> load_JSON_to_hashmap(File filename){    
+        //Not the same as the settings loader - do we need to be this specific?
+        HashMap<String, Object> JSON_Hash = new HashMap<String, Object>();
+        if(filename.exists()){
+            try{
+                //http://www.adam-bien.com/roller/abien/entry/java_8_reading_a_file
+                String contents = new String(Files.readAllBytes(filename.toPath()));
+                if (contents == null || contents.equalsIgnoreCase("null")){
+                    System.out.println("NO DATA!");
+                } else {
+                    JSON_Hash = json_parse_class.createHashMapFromJsonString(contents);
+                }
+                //System.out.println(plate_JSON_Hash.toString());
+            } catch (IOException ex) {
+                Logger.getLogger(HCAFLIMPluginFrame.class.getName()).log(Level.SEVERE, null, ex);
+                //JSON_Hash.put("ERROR", "IO exception of some sort: "+ex.toString());
+                System.out.println("ERROR - IO exception of some sort: "+ex.toString());
+            }   
+        } else {
+            //###!!!###MAKE THIS A POPUP
+            System.out.println("ERROR - Settings file not found: "+filename.toString()+". Stage setup now needed! Please do this!");
+//            try {
+//                filename.createNewFile();
+//                save_plate_props();
+//            } catch (IOException ex) {
+//                Logger.getLogger(OpenHCA2_hostframe.class.getName()).log(Level.SEVERE, null, ex);
+//                System.out.println("ERROR - File could not be written: "+filename.toString()+" - creating a default settings file. Stage setup now needed!");
+//            }
+        }
+        return JSON_Hash;
+    }    
+       
+    
+    public void loadXYZ_MM2() throws MMScriptException{
+        PositionList poslist = gui_.getPositionList();
+        // Get folder to load positions from
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Select directory to load positions saved from MM2");
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        Component parentFrame = null;
+        int returnVal = chooser.showOpenDialog(parentFrame);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            XYZfolder = chooser.getSelectedFile().getPath();
+        }
+
+        File saved_posns = new File(XYZfolder);
+        HashMap<String, Object> hm = load_JSON_to_hashmap(saved_posns);
+        this.xYSequencing1.uncheckAutogenerateFOVs();
+
+        String XYStage = core_.getXYStageDevice();
+        String ZStage = core_.getFocusDevice();
+        for(Object value:hm.values()){
+            //It's a hasmap of hashmaps...
+            System.out.println(value);
+            HashMap<String, Object> nhm = (HashMap<String,Object>) value;
+            String name = "";
+            double xval = 0.0;
+            double yval = 0.0;
+            double zval = 0.0;
+            for(String sub_hmvalue:nhm.keySet()){
+                Object val = nhm.get(sub_hmvalue);
+                switch(sub_hmvalue){
+                    case("name"):
+                        name = val.toString();
+                        break;
+                    case("x_pos_ss"):
+                        xval = Double.parseDouble(val.toString());
+                        break;
+                    case("y_pos_ss"):
+                        yval = Double.parseDouble(val.toString());
+                        break;
+                    case("z_pos_ss"):
+                        zval = Double.parseDouble(val.toString());
+                        break;      
+                }
+            }
+            MultiStagePosition pos = new MultiStagePosition(XYStage,xval,yval,ZStage,zval);
+            pos.setLabel(name);
+            poslist.addPosition(pos);
+        }
+
     }
     
     private void setupSequencingTable(){

@@ -50,6 +50,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="forceAFdefault" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="load_MM2_poslist" alignment="0" min="-2" pref="174" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="11" max="32767" attributes="0"/>
                   </Group>
@@ -117,6 +118,8 @@
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="JSONview" min="-2" pref="92" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="load_MM2_poslist" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
@@ -174,7 +177,7 @@
               <Component id="eMailDefault" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="SpecialAcquistionTickBox" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="149" max="32767" attributes="0"/>
+              <EmptySpace pref="166" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -801,6 +804,14 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="recompile with this here"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="load_MM2_poslist">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Load MM2 positionlist"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="load_MM2_poslistActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

@@ -24,6 +24,9 @@ import java.io.InputStreamReader;
 import java.util.Hashtable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.micromanager.utils.MMScriptException;
 /**
  *
  * @author Frederik
@@ -143,6 +146,7 @@ public class ProSettingsPanel extends javax.swing.JPanel {
         UpdateEmailButton = new javax.swing.JButton();
         SpecialAcquistionTickBox = new javax.swing.JCheckBox();
         jLabel4 = new javax.swing.JLabel();
+        load_MM2_poslist = new javax.swing.JButton();
 
         arduinoPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Arduino"));
 
@@ -538,6 +542,13 @@ public class ProSettingsPanel extends javax.swing.JPanel {
 
         jLabel4.setText("recompile with this here");
 
+        load_MM2_poslist.setText("Load MM2 positionlist");
+        load_MM2_poslist.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                load_MM2_poslistActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -569,7 +580,8 @@ public class ProSettingsPanel extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(H_V_swap)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(forceAFdefault)))
+                                .addComponent(forceAFdefault))
+                            .addComponent(load_MM2_poslist, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 11, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -618,7 +630,9 @@ public class ProSettingsPanel extends javax.swing.JPanel {
                             .addComponent(JSONtest)
                             .addComponent(readJSON))
                         .addGap(18, 18, 18)
-                        .addComponent(JSONview, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(JSONview, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(load_MM2_poslist)))
                 .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -664,7 +678,7 @@ public class ProSettingsPanel extends javax.swing.JPanel {
                 .addComponent(eMailDefault)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(SpecialAcquistionTickBox)
-                .addContainerGap(149, Short.MAX_VALUE))
+                .addContainerGap(166, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -815,6 +829,14 @@ public class ProSettingsPanel extends javax.swing.JPanel {
         parent_.update_HRI_comm_wait(get_Del_box_comm_wait());
     }//GEN-LAST:event_del_box_comm_waitActionPerformed
 
+    private void load_MM2_poslistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_load_MM2_poslistActionPerformed
+        try {
+            parent_.loadXYZ_MM2();
+        } catch (MMScriptException ex) {
+            Logger.getLogger(ProSettingsPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_load_MM2_poslistActionPerformed
+
     public double getHshiftscale(){
         return H_shift_scale;
     }
@@ -961,6 +983,7 @@ public class ProSettingsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JTextField laserIntensityField;
     private javax.swing.JLabel laserIntensityLabel;
+    private javax.swing.JButton load_MM2_poslist;
     private javax.swing.JComboBox motorizedMicroscopeTableComboBox;
     private javax.swing.JTextField pct_coverage_text;
     private javax.swing.JTextField percentage_coverage;
